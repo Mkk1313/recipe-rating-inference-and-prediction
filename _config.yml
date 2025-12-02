@@ -1,1 +1,4 @@
-theme: Cayman
+theme: jekyll-theme-cayman
+title: Recipe Rating Inference and Prediction
+description: A project on inferring and predicting recipe ratings using machine learning techniques.
+author: Mark Kaplunow
