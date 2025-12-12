@@ -29,7 +29,7 @@ This question is interesting because French cuisine has a prestigious reputation
 
 I performed the following cleaning steps to prepare the dataset for analysis:
 
-1. **Replaced ratings of 0 with NaN**: On Food.com, the rating scale is 1-5, so a rating of 0 indicates a missing value rather than an actual rating. There were 15,036 such instances.
+1. **Replaced ratings of 0 with NaN**: On Food.com, the rating scale is 1-5, so a rating of 0 indicates a missing value rather than an actual rating. There were **51,832 such instances** (not 15,036 as previously noted).
 
 2. **Aggregated ratings by recipe**: Combined individual user ratings into average ratings per recipe, creating the `avg_rating` and `num_ratings` columns.
 
@@ -37,9 +37,9 @@ I performed the following cleaning steps to prepare the dataset for analysis:
 
 4. **Created `n_steps` column**: Counted the number of steps in each recipe.
 
-5. **Identified French recipes**: Created a binary `is_french` column by searching for French-related keywords in both recipe names and tags. Keywords included: 'french', 'français', 'provençal', 'quiche', 'baguette', 'crepe', 'soufflé', 'ratatouille', 'coq au vin', 'croissant', 'brioche', 'cassoulet', 'bouillabaisse', and 'nicoise'. This identified 1,049 French recipes.
+5. **Identified French recipes**: Created a binary `is_french` column by searching for French-related keywords in both recipe names and tags. Keywords included: 'french', 'français', 'provençal', 'quiche', 'baguette', 'crepe', 'soufflé', 'ratatouille', 'coq au vin', 'croissant', 'brioche', 'cassoulet', 'bouillabaisse', and 'nicoise'. This identified **1,864 French recipes** (not 1,049).
 
-6. **Handled extreme outliers in cooking time**: Capped cooking times at 10,080 minutes (1 week) to handle unrealistic values while preserving legitimate long-cooking recipes.
+6. **Handled extreme outliers in cooking time**: Capped cooking times at 10,080 minutes (1 week) to handle unrealistic values while preserving legitimate long-cooking recipes. 66 recipes exceeded this threshold.
 
 7. **Created `submitted_year` column**: Extracted the year from the submission date to analyze temporal trends.
 
@@ -51,11 +51,11 @@ These cleaning steps ensure data quality and create the features necessary for b
 |:-------------------------------------|------------------:|----------------:|----------:|-------------:|--------------:|:------------|------------------:|
 | 1 brownies in the world    best ever |                40 |               9 |        10 |            4 |             1 | False       |             2008 |
 | 1 in canada chocolate chip cookies   |                45 |              11 |        12 |            5 |             1 | False       |             2011 |
-| 412 broccoli casserole               |                40 |               9 |         6 |            5 |             3 | False       |             2008 |
+| 412 broccoli casserole               |                40 |               9 |         6 |            5 |             4 | False       |             2008 |
 | millionaire pound cake               |               120 |               7 |         7 |            5 |             1 | False       |             2008 |
-| 2000 meatloaf                        |                90 |              13 |        17 |            5 |             1 | False       |             2012 |
+| 2000 meatloaf                        |                90 |              13 |        17 |            5 |             2 | False       |             2012 |
 
-**Total recipes with ratings:** 83,782
+**Total recipes with ratings:** 81,173 (out of 83,782 total recipes)
 
 ---
 
@@ -63,11 +63,11 @@ These cleaning steps ensure data quality and create the features necessary for b
 
 <iframe src="assets/fig1_rating_distribution.html" width=800 height=600 frameBorder=0></iframe>
 
-The distribution of average ratings is heavily left-skewed, with most recipes receiving ratings between 4.0 and 5.0. The mode is approximately 5.0, indicating that users tend to rate recipes they tried very positively. This suggests a potential selection bias: users may be more likely to rate recipes they enjoyed and skip rating recipes they didn't like. The mean rating is 4.63, which is quite high on a 1-5 scale.
+The distribution of average ratings is heavily left-skewed, with most recipes receiving ratings between 4.0 and 5.0. The **mode is 5.0**, indicating that users tend to rate recipes they tried very positively. This suggests a potential selection bias: users may be more likely to rate recipes they enjoyed and skip rating recipes they didn't like. The **mean rating is 4.625**, which is quite high on a 1-5 scale.
 
 <iframe src="assets/fig2_ingredients_distribution.html" width=800 height=600 frameBorder=0></iframe>
 
-The number of ingredients follows a roughly normal distribution with a slight right skew, centered around 9 ingredients. Most recipes contain between 5 and 13 ingredients. There are some outliers with 30+ ingredients, likely representing complex dishes or compilation recipes.
+The number of ingredients follows a roughly normal distribution centered around **9 ingredients**, with most recipes containing between 5-13 ingredients. There are some outliers with up to 37 ingredients, likely representing complex dishes or compilation recipes.
 
 ---
 
@@ -75,11 +75,11 @@ The number of ingredients follows a roughly normal distribution with a slight ri
 
 <iframe src="assets/fig3_french_vs_nonfrench.html" width=800 height=600 frameBorder=0></iframe>
 
-This box plot compares the rating distributions of French and non-French recipes. Interestingly, both groups show similar median ratings (around 4.75), with French recipes showing slightly less variance. However, the similar distributions suggest that French recipes do not have substantially higher ratings overall—though this doesn't account for ingredient similarity, which is addressed in our hypothesis test.
+This box plot compares the rating distributions of French and non-French recipes. Both groups show **similar median ratings (around 5.0)**, with French recipes showing similar variance. The similar distributions suggest that French recipes do not have substantially higher ratings overall—though this doesn't account for ingredient similarity, which is addressed in our hypothesis test.
 
 <iframe src="assets/fig4_time_vs_rating.html" width=800 height=600 frameBorder=0></iframe>
 
-This scatter plot shows a weak relationship between cooking time and rating. Most highly-rated recipes (4.5-5.0) exist across the entire spectrum of cooking times, suggesting that users value recipes equally whether they're quick or time-intensive. There's a slight concentration of highly-rated recipes in the 30-60 minute range, possibly representing a "sweet spot" for home cooking.
+This scatter plot shows a **weak relationship** between cooking time and rating. Most highly-rated recipes (4.5-5.0) exist across the entire spectrum of cooking times, suggesting that users value recipes equally whether they're quick or time-intensive.
 
 ---
 
@@ -89,20 +89,20 @@ This scatter plot shows a weak relationship between cooking time and rating. Mos
 
 |            |   Avg Rating |   Avg Minutes |   Avg Ingredients |   Avg Steps |   Recipe Count |
 |:-----------|-------------:|--------------:|------------------:|------------:|---------------:|
-| Non-French |         4.63 |        110.55 |              9.05 |        9.86 |          82733 |
-| French     |         4.64 |        103.92 |              9.52 |       10.12 |           1049 |
+| Non-French |         4.62 |         83.37 |              9.21 |       10.06 |          81918 |
+| French     |         4.65 |         96.21 |              9.43 |       12.20 |           1864 |
 
-French recipes have marginally higher average ratings (4.64 vs 4.63), slightly more ingredients on average (9.52 vs 9.05), and slightly more steps (10.12 vs 9.86). However, these differences are quite small, and French recipes actually take slightly less time on average (103.92 vs 110.55 minutes). The small sample size of French recipes (1,049) compared to non-French (82,733) is notable.
+French recipes have **marginally higher average ratings** (4.65 vs 4.62), slightly more ingredients on average (9.43 vs 9.21), and **more steps** (12.20 vs 10.06). French recipes also take **longer to prepare** on average (96.21 vs 83.37 minutes).
 
 **Table 2: Recipe Characteristics by Complexity**
 
 | complexity        |   Avg Rating |   Recipe Count |   Avg Minutes |   Avg Steps |
 |:------------------|-------------:|---------------:|--------------:|------------:|
-| Simple (≤6)       |         4.64 |          23086 |         83.24 |        8.25 |
-| Medium (7-10)     |         4.63 |          37341 |        110.17 |        9.44 |
-| Complex (11+)     |         4.62 |          23355 |        136.39 |       12.17 |
+| Simple (≤6)       |         4.64 |          21021 |         80.37 |        6.98 |
+| Medium (7-10)     |         4.61 |          33071 |         74.99 |        9.58 |
+| Complex (11+)     |         4.63 |          27081 |         96.76 |       13.17 |
 
-Interestingly, simpler recipes (6 or fewer ingredients) have slightly higher average ratings than complex recipes. This could indicate that users prefer straightforward recipes, or that simpler recipes have less room for error in execution. As expected, recipe complexity correlates strongly with both cooking time and number of steps.
+Interestingly, **simpler recipes (≤6 ingredients) have slightly higher average ratings** than medium-complexity recipes. This could indicate that users prefer straightforward recipes, or that simpler recipes have less room for error in execution. As expected, recipe complexity correlates strongly with both cooking time and number of steps.
 
 ---
 
@@ -112,29 +112,31 @@ Interestingly, simpler recipes (6 or fewer ingredients) have slightly higher ave
 
 I believe the **`description`** column is likely **NMAR (Not Missing At Random)**.
 
-The description column has 114 missing values. This missingness is likely NMAR because the decision to leave a description blank depends on the description itself—specifically, its perceived necessity. Recipe contributors may not provide descriptions for recipes they consider self-explanatory or very simple (e.g., "toast" or "scrambled eggs"). Similarly, contributors might skip descriptions when they feel the recipe name is sufficiently descriptive (e.g., "Classic Chocolate Chip Cookies").
+The description column has **70 missing values**. This missingness is likely NMAR because the decision to leave a description blank depends on the description itself—specifically, its perceived necessity. Recipe contributors may not provide descriptions for recipes they consider self-explanatory or very simple.
 
 The key insight is that the missingness mechanism is directly related to the *unobserved value* of the description: recipes with missing descriptions likely would have had simple or redundant descriptions if they were filled in.
 
 **Additional data that could explain this missingness (making it MAR):**
-- **User engagement metrics**: Number of recipes posted by each user, time spent on Food.com (more engaged users might consistently write descriptions)
-- **Recipe complexity score**: An external measure of recipe complexity could reveal whether simpler recipes systematically have more missing descriptions
-- **User demographic data**: Contributor experience level or account age might predict description completeness
+- **User engagement metrics**: Number of recipes posted by each user, time spent on Food.com
+- **Recipe complexity score**: An external measure of recipe complexity
+- **User demographic data**: Contributor experience level or account age
 
 ---
 
 ### Missingness Dependency
 
-I analyzed whether the missingness of **`avg_rating`** depends on other columns. Recipes have missing average ratings when they received no user ratings at all.
+I analyzed whether the missingness of **`avg_rating`** depends on other columns. Recipes have missing average ratings when they received no user ratings at all (2,609 recipes).
 
 **Test 1: Does avg_rating missingness depend on n_ingredients?**
 
 <iframe src="assets/fig6_missingness_ingredients.html" width=800 height=600 frameBorder=0></iframe>
 
-- **Observed difference in mean ingredients:** -0.5423
-- **P-value:** 0.000
+- **Observed difference in mean ingredients:** -0.2542
+  - Recipes WITH ratings: 9.21 ingredients
+  - Recipes WITHOUT ratings: 9.46 ingredients
+- **P-value:** 0.0000
 
-With a p-value of 0.000, we reject the null hypothesis. The missingness of `avg_rating` **does depend** on `n_ingredients`, making it **MAR (Missing At Random)**. Recipes with missing ratings have significantly fewer ingredients on average, suggesting that simpler recipes may be less likely to receive user ratings—possibly because users view them as too basic to warrant feedback.
+With a p-value of 0.0000, we reject the null hypothesis. The missingness of `avg_rating` **does depend** on `n_ingredients`, making it **MAR (Missing At Random)**. Recipes with missing ratings have **slightly more ingredients** on average.
 
 ---
 
@@ -142,10 +144,12 @@ With a p-value of 0.000, we reject the null hypothesis. The missingness of `avg_
 
 <iframe src="assets/fig7_missingness_year.html" width=800 height=600 frameBorder=0></iframe>
 
-- **Observed difference in mean year:** -1.7688
-- **P-value:** 0.000
+- **Observed difference in mean year:** -0.7297
+  - Recipes WITH ratings: avg year 2009.4
+  - Recipes WITHOUT ratings: avg year 2010.2
+- **P-value:** 0.0000
 
-With a p-value of 0.000, we reject the null hypothesis. The missingness of `avg_rating` **does depend** on `submitted_year`, making it **MAR**. Recipes submitted in later years are more likely to have missing ratings, which makes sense: newer recipes have had less time to accumulate user ratings compared to older recipes.
+With a p-value of 0.0000, we reject the null hypothesis. The missingness of `avg_rating` **does depend** on `submitted_year`, making it **MAR**. Recipes submitted in **later years (2010+) are more likely to have missing ratings**, which makes sense: newer recipes have had less time to accumulate user ratings.
 
 ---
 
@@ -170,14 +174,14 @@ With a p-value of 0.000, we reject the null hypothesis. The missingness of `avg_
 <iframe src="assets/fig8_hypothesis_test.html" width=800 height=600 frameBorder=0></iframe>
 
 **Results:**
-- French recipes mean rating: 4.6407
-- Similar non-French recipes mean rating: 4.6325
-- Observed difference: 0.0082
-- **P-value: 0.5432**
+- French recipes mean rating: 4.6488
+- Similar non-French recipes mean rating: 4.5860
+- **Observed difference: 0.0628**
+- **P-value: 0.0008**
 
-**Conclusion:** With a p-value of 0.5432, we **fail to reject the null hypothesis** at the α = 0.05 significance level. The data does not provide sufficient evidence that French recipes are rated higher than similar non-French recipes when controlling for ingredients. 
+**Conclusion:** With a p-value of 0.0008, we **reject the null hypothesis** at the α = 0.05 significance level. 
 
-This suggests that the prestige associated with French cuisine does not translate to higher user ratings on Food.com. When recipes have similar ingredients, users rate them similarly regardless of whether they're labeled as "French." This implies that recipe ratings are primarily driven by the actual ingredients and execution rather than cultural associations.
+The data suggests that **French recipes ARE rated higher than similar non-French recipes** when controlling for ingredients. This indicates that the prestigious reputation of French cuisine may indeed translate to higher user ratings, even when comparing recipes with similar ingredients.
 
 ---
 
@@ -189,14 +193,14 @@ This suggests that the prestige associated with French cuisine does not translat
 
 **Response Variable:** `avg_rating`
 - This represents the average of all user ratings for a recipe
-- I chose this because it's a key metric of recipe quality and user satisfaction
-- It's more stable than individual ratings since it aggregates multiple user opinions
+- Chosen because it's a key metric of recipe quality and user satisfaction
+- More stable than individual ratings since it aggregates multiple user opinions
 
 **Evaluation Metric:** Root Mean Squared Error (RMSE)
 - Chosen over MAE because RMSE penalizes large errors more heavily
 - Since ratings are on a 1-5 scale, we want to avoid predictions that are way off
 - RMSE is in the same units as our target (rating points)
-- Also reporting R² to understand the proportion of variance explained
+- Also reporting R² to understand proportion of variance explained
 
 **Information Available at Time of Prediction:**
 
@@ -230,21 +234,21 @@ Therefore, I only use features that would be available at recipe submission time
 - Nominal feature: `is_french` converted from boolean to integer (0/1)
 
 **Performance:**
-- **Training RMSE:** 0.6256
-- **Test RMSE:** 0.6260
-- **Training R²:** 0.0107
-- **Test R²:** 0.0105
+- **Training RMSE:** 0.6419
+- **Test RMSE:** 0.6361
+- **Training R²:** 0.0002
+- **Test R²:** -0.0007
 
 **Is this model "good"?**
 
-No, this baseline model is **not particularly good**. The test RMSE of 0.6260 means our predictions are off by about 0.63 rating points on average. Given that:
-- The rating scale is 1-5 (a range of 4 points)
-- The standard deviation of ratings is 0.6304
-- A naive model that always predicts the mean would achieve RMSE ≈ 0.63
+The baseline model achieves a test RMSE of 0.6361, meaning our predictions are off by about 0.64 rating points on average. Given that:
+- The rating scale is 1-5 (range of 4 points)
+- The standard deviation of ratings is 0.6408
+- A naive prediction of the mean would give RMSE = 0.6408
 
-Our baseline model barely outperforms the naive mean prediction. The R² of 0.0105 indicates we're explaining only about 1% of the variance in ratings, which is very low. 
+This baseline model is **marginally better than simply predicting the mean** rating for all recipes, but there is **substantial room for improvement**. The R² of -0.0007 indicates we're explaining **very little variance** in ratings.
 
-However, this establishes a reasonable baseline for comparison. The poor performance suggests that recipe ratings are influenced by factors beyond simple characteristics like cooking time, ingredient count, and cuisine type. This motivates the need for more sophisticated features and modeling approaches in our final model.
+The model is **NOT particularly good**, but it establishes a reasonable baseline for comparison with our final model.
 
 ---
 
@@ -256,76 +260,71 @@ I added **6 new features** beyond the baseline, each designed to capture aspects
 
 1. **`log_minutes`** (Quantitative transformation)
    - Log-transform of cooking time to handle the right-skewed distribution
-   - **Why it's good:** The difference between 10 and 20 minutes is more perceptually significant than between 110 and 120 minutes. Log transformation captures this non-linear relationship between time and perceived complexity/convenience.
+   - **Why it's good:** The difference between 10 and 20 minutes is more perceptually significant than between 110 and 120 minutes
 
 2. **`ingredients_per_step`** (Quantitative ratio)
-   - Ratio of ingredients to steps (ingredients / steps)
-   - **Why it's good:** This measures recipe density. A recipe with 12 ingredients but only 3 steps might be simpler to execute than one with 6 ingredients and 12 steps. This ratio captures recipe workflow complexity.
+   - Ratio of ingredients to steps
+   - **Why it's good:** Captures recipe workflow complexity/density
 
 3. **`has_many_ingredients`** (Nominal binary)
-   - 1 if recipe has more than 12 ingredients, 0 otherwise
-   - **Why it's good:** Based on data exploration, 12 ingredients represents the 75th percentile. Very ingredient-heavy recipes may be perceived as intimidating or special occasion recipes, potentially affecting ratings differently than standard recipes.
+   - 1 if recipe has > 12 ingredients, 0 otherwise
+   - **Why it's good:** Based on 75th percentile; very ingredient-heavy recipes may be perceived differently
 
 4. **`is_quick_recipe`** (Nominal binary)
-   - 1 if cooking time is under 30 minutes, 0 otherwise
-   - **Why it's good:** Quick recipes appeal to busy users seeking convenience. This threshold captures "weeknight dinner" recipes that might be rated favorably for their practicality.
+   - 1 if cooking time < 30 minutes, 0 otherwise
+   - **Why it's good:** Quick recipes appeal to users seeking convenience
 
 5. **`complexity_score`** (Quantitative engineered)
    - Formula: (n_ingredients × n_steps) / log(minutes + 1)
-   - **Why it's good:** Combines multiple complexity dimensions into a single score. A recipe with many ingredients and steps but short cooking time might be complex to execute (high score), while a simple recipe with few ingredients, few steps, and reasonable time has a low score. This captures overall recipe difficulty.
+   - **Why it's good:** Combines multiple complexity dimensions into single score
 
 6. **`submitted_year`** (Quantitative)
-   - Year the recipe was submitted to Food.com
-   - **Why it's good:** User rating behavior may have changed over time as the platform evolved. Early adopters might rate differently than later users, or rating inflation/deflation may have occurred over the 10-year span.
+   - Year of recipe submission
+   - **Why it's good:** User rating behavior may have changed over time on the platform
 
-These features improve the model by capturing **non-linear relationships** (log_minutes), **interaction effects** (complexity_score), **threshold effects** (has_many_ingredients, is_quick_recipe), and **temporal trends** (submitted_year) that a simple linear model on raw features would miss.
+These features improve the model by capturing **non-linear relationships**, **interaction effects**, **threshold effects**, and **temporal trends** that a simple linear model would miss.
 
 ---
 
 ### Model Selection and Hyperparameter Tuning
 
 **Model:** Random Forest Regressor
-- Chosen over Linear Regression for its ability to capture non-linear relationships
-- Can automatically handle feature interactions
-- More robust to outliers than linear models
+- Chosen over Linear Regression for ability to capture non-linear relationships
+- Can handle feature interactions automatically
+- More robust to outliers
 
 **Hyperparameter Search:**
 
-I used **GridSearchCV with 5-fold cross-validation** to tune the following parameters:
+I used **GridSearchCV with 5-fold cross-validation** to tune:
+- **`n_estimators`** [50, 100, 200]: Number of trees
+- **`max_depth`** [None, 10, 20]: Maximum tree depth
+- **`min_samples_split`** [2, 5, 10]: Minimum samples to split
+- **`min_samples_leaf`** [1, 2, 4]: Minimum samples at leaf
 
-- **`n_estimators`** [50, 100, 200]: Number of trees in the forest
-  - More trees = more stable predictions but longer training time
-- **`max_depth`** [None, 10, 20]: Maximum depth of each tree
-  - Controls model complexity and overfitting risk
-- **`min_samples_split`** [2, 5, 10]: Minimum samples required to split a node
-  - Higher values prevent overfitting by requiring more evidence before splitting
-- **`min_samples_leaf`** [1, 2, 4]: Minimum samples required at leaf node
-  - Controls granularity of predictions
-
-**Total combinations tested:** 108
+**Total combinations tested:** 81
 
 **Best Hyperparameters Found:**
 - `n_estimators`: 200
-- `max_depth`: 20
+- `max_depth`: 10
 - `min_samples_split`: 10
-- `min_samples_leaf`: 2
+- `min_samples_leaf`: 4
 
 ---
 
 ### Final Model Performance
 
 **Performance Metrics:**
-- **Training RMSE:** 0.5891
-- **Test RMSE:** 0.6128
-- **Training R²:** 0.1228
-- **Test R²:** 0.0527
+- **Training RMSE:** 0.6273
+- **Test RMSE:** 0.6364
+- **Training R²:** 0.0453
+- **Test R²:** -0.0016
 
 **Top 5 Most Important Features:**
-1. `submitted_year` (0.2841)
-2. `n_steps` (0.1523)
-3. `complexity_score` (0.1289)
-4. `minutes_cleaned` (0.1167)
-5. `n_ingredients` (0.1045)
+1. `complexity_score` (0.3151)
+2. `ingredients_per_step` (0.1945)
+3. `log_minutes` (0.1132)
+4. `minutes_cleaned` (0.1124)
+5. `submitted_year` (0.1070)
 
 <iframe src="assets/fig_predictions.html" width=800 height=600 frameBorder=0></iframe>
 
@@ -337,17 +336,15 @@ I used **GridSearchCV with 5-fold cross-validation** to tune the following param
 
 | Metric | Baseline | Final Model | Improvement |
 |--------|----------|-------------|-------------|
-| Test RMSE | 0.6260 | 0.6128 | -0.0132 (2.11% reduction) |
-| Test R² | 0.0105 | 0.0527 | +0.0422 |
+| Test RMSE | 0.6361 | 0.6364 | -0.0003 (-0.05% reduction) |
+| Test R² | -0.0007 | -0.0016 | -0.0009 |
 
-The final model shows **meaningful improvement** over the baseline:
+**Important Note:** The final model shows **minimal improvement** over the baseline in terms of RMSE, and actually performs slightly worse in terms of R². This suggests that:
+1. The additional features didn't substantially improve predictive power
+2. Random Forest's ability to capture non-linear relationships didn't yield better predictions in this case
+3. Recipe ratings may be influenced by factors not captured in our feature set
 
-- **RMSE decreased by 0.0132 points** (2.11% reduction), meaning predictions are more accurate on average
-- **R² increased by 0.0422**, now explaining 5.27% of variance in ratings (a 5x improvement over baseline's 1.05%)
-- The Random Forest's ability to capture **non-linear relationships** and **feature interactions** led to better predictions
-- Engineered features, especially `submitted_year` and `complexity_score`, proved highly predictive
-
-While 5.27% explained variance may seem low, predicting recipe ratings is inherently difficult because ratings are subjective and influenced by many factors we cannot measure (user skill level, ingredient quality, personal taste preferences, etc.). The improvement demonstrates that recipe characteristics do provide some signal about expected ratings, even if they don't fully determine them.
+The **complexity_score** emerged as the most important feature, indicating that recipe complexity plays a role in how users rate recipes.
 
 ---
 
@@ -376,12 +373,12 @@ While 5.27% explained variance may seem low, predicting recipe ratings is inhere
 ### Results
 
 **Observed RMSE:**
-- French recipes: 0.6384
-- Non-French recipes: 0.6125
-- Absolute difference: 0.0259
+- French recipes: 0.7170
+- Non-French recipes: 0.6343
+- **Absolute difference: 0.0826**
 
 **Permutation Test:** 10,000 iterations  
-**P-value:** 0.1247
+**P-value:** 0.1236
 
 <iframe src="assets/fig_fairness.html" width=800 height=600 frameBorder=0></iframe>
 
@@ -391,15 +388,10 @@ While 5.27% explained variance may seem low, predicting recipe ratings is inhere
 
 ### Conclusion
 
-With a p-value of 0.1247, we **fail to reject the null hypothesis** at the α = 0.05 significance level.
+With a p-value of 0.1236, we **fail to reject the null hypothesis** at the α = 0.05 significance level.
 
-**Conclusion:** Our model appears to perform **fairly** between French and non-French recipes. The difference in RMSE between these groups (0.0259) is not statistically significant and could reasonably be due to random chance.
+**Conclusion:** Our model appears to perform **fairly** between French and non-French recipes. The difference in RMSE between these groups (0.0826) is not statistically significant and could be due to random chance.
 
-This suggests that the model treats both types of recipes similarly and does not systematically favor one group over the other in terms of prediction accuracy. While French recipes have slightly higher average error (0.6384 vs 0.6125), this difference is within the range we'd expect from random variation given the sample sizes.
+This suggests that the model treats both types of recipes similarly and does not systematically favor one group over the other in terms of prediction accuracy. While French recipes have higher average error (0.7170 vs 0.6343), this difference is within the range we'd expect from random variation given the sample sizes (376 French vs 15,859 non-French recipes).
 
-The fairness of our model is reassuring, especially given that:
-1. French recipes are a minority class (only 1.3% of the dataset)
-2. The model was not specifically designed to handle this imbalance
-3. French recipes might have different rating patterns due to cultural factors
-
-The lack of significant bias suggests our engineered features capture recipe quality in a way that generalizes across cuisine types.
+The fairness of our model is reassuring, especially given that French recipes are a minority class (only 2.2% of the dataset) and might have different rating patterns due to cultural factors.
